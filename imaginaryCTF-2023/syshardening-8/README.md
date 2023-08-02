@@ -1,9 +1,3 @@
-////DO EXTRA MILES
-Have an extra mile seciton where you fix things that are not scored but vulnerable or that need fixing
--ssh keys
--remove bad console prompt
-
-
 # __ImaginaryCTF 2023 Syshardening 8 writeup__:
 By: Vague (with thanks to Uvuvue, RJCyber, and my CTF team SPL [specifically Donkey and Brayden])
 <br>
