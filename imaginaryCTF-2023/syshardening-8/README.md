@@ -51,7 +51,10 @@ Now close and reopen your terminator terminal to make these changes go into effe
 ## Forensics Question 1 correct (b8ac3e1c12235ec54580131a511f2c9a) - 3 pts
 
 ```text
-Greetings, fellow seekers of knowledge! We beckon your expertise on a quest of utmost importance. Deep within the digital realm, a hidden secret awaits our discovery. In the file /home/frodo/magic_cookie, a key of great significance lies concealed, encoded in the enigmatic language of hex representation. As esteemed adventurers, it is your noble duty to embark upon this quest, extracting the key from its cryptic confines. With unwavering determination and keen intellect, reveal to us the hex-encoded representation of this sacred key. May your endeavors be blessed with success, as together we unlock the secrets that await within the realms of Middle-earth's digital tapestry.
+Greetings, fellow seekers of knowledge! We beckon your expertise on a quest of utmost importance. Deep within the digital realm, a hidden secret awaits our discovery.
+ In the file /home/frodo/magic_cookie, a key of great significance lies concealed, encoded in the enigmatic language of hex representation. As esteemed adventurers,
+it is your noble duty to embark upon this quest, extracting the key from its cryptic confines. With unwavering determination and keen intellect, reveal to us the hex-encoded representation of this sacred key.
+ May your endeavors be blessed with success, as together we unlock the secrets that await within the realms of Middle-earth's digital tapestry.
 
 ANSWER:
 ```
