@@ -621,7 +621,9 @@ This was anther vuln specified by the ReadMe expect this time it has to do with 
 <br>
 The ReadMe states:
 ```text
-We are experiencing some problems with the /cgi-bin/quest endpoint, as it should display text from the fortune command. This does not seem to be functional. Please investigate this, and ensure that the website is functional. Do not edit the CGI script itself. The CGI scripts must remain exactly as-is.
+We are experiencing some problems with the /cgi-bin/quest endpoint, as it should display text from the fortune command.
+This does not seem to be functional. Please investigate this, and ensure that the website is functional. Do not edit
+the CGI script itself. The CGI scripts must remain exactly as-is.
 ```
 <br>
 There is a web server running CGI bins. Because the CGI bin configurations are normally specified by the web server, we will check the boa configuration file located at `/etc/boa/boa.conf`
@@ -761,7 +763,8 @@ This is another thing the ReadMe asks us to do.
 <br>
 It states, 
 ```text
-In addition to the CGI content and main webpage, the web server is authorized to serve the folder /var/www/html/files/ as a public data directory. Ensure that all users can read and write to their own files in this folder.
+In addition to the CGI content and main webpage, the web server is authorized to serve the folder /var/www/html/files/ as a
+public data directory. Ensure that all users can read and write to their own files in this folder.
 ```
 <br>
 This is very straight forward, we simply need to allow users to read and write to files owned by them in that directory.
