@@ -392,3 +392,608 @@ It triggers on the original Shell Shock payload as well as, what we can assume t
 
 <br>
 
+# Vulnerabilities
+* *note this won't be in the exact order of the scoring report but rather in an order that works better for the image*
+
+## Firewalld service is started - 2 pts
+So firstly lets just install firewalld for good measure. Run, `dnf install firewalld -y`
+<br>
+Now that it is installed, try to start it with `systemctl start firewalld`
+<br>
+When doing this we get an error saying its masked. Simply run the command `systemctl unmask --now firewalld`
+<br>
+Now simply enable and start the firewalld service and it should be running!
+<br>![Alt text](2023-08-02_18-38.png)<br>
+
+## Firewalld IPv6 spoofing checks enabled - 3 pts
+
+On the subject of firewalld, lets do some firewalld configuration hardening.
+<br>
+Simply open up `/etc/firewalld/firewalld.conf` and change the variable `IPv6_rpfilter` to be `yes`.<br> It is set to "no" by default but this is insecure and should be changed to "yes"
+<br>![Alt text](2023-08-02_18-44.png)<br>
+
+## Firewalld blocks invalid IPv6 to IPv4 traffic - 3 pts
+For this next one, we will continue in the file `/etc/firewalld/firewalld.conf` but this time go to the very bottom.
+<br>
+We will see a variable called `RFC3964_IPv4` which is set to "no" by default but this does not comply with RFC 3964 standard in regards to 6to4 traffic.
+<br>
+Simply change this to "yes" to get the points!<br>![Alt text](2023-08-02_18-47.png)
+<br>
+
+## List of administrators is correct - 1 pts
+
+We will go back to the basics for this one.
+<br>
+According to the ReadMe, only the user "frodo" should be an administrator, but when we check out who is in the admin group "wheel", we notice there are 3 users that do not belong.
+<br>![Alt text](2023-08-02_18-50.png)<br>
+Simply edit the file "/etc/group" and remove "samwise, pippin, and merry" from the group "wheel"
+<br>
+
+## No users are part of the sys group - 1 pts
+
+This also lies in /etc/group, where there is a non administrator in the 'sys' group
+<br>
+The sys group is intended to give administrative rights to users within it, and there should not be any non administrators or sometimes no users at all in it.
+<br>
+In this case, the user "gandalf" is in group "sys"
+<br>
+Remove him from the group in `/etc/group` to get the points
+<br>![Alt text](2023-08-02_18-54.png)<br>
+
+## Sudo does not preserve environment variables - 1 pts
+
+This vulnerability exists in the file `/etc/sudoers` which sets the context for superuser commands and users, mainly by allowing particular users to run various commands as the root user, without needing the root password.
+<br>
+Open the sudoers file with the command `visudo`
+<br>
+Near the bottom we see a line that says `Defaults    !env_reset`
+<br>
+This means that when a command is run as sudo, the environment variables are not reset, allowing essentially unprivileged users access to setting root env variables, leading to a myriad of priv esc techniques. 
+<br>
+To fix this, simply change the value of `Defaults    !env_reset` to `Defaults    env_reset`
+<br>
+![Alt text](2023-08-02_20-58.png)
+<br>
+
+## Unprivileged users are not allowed access to BPF - 2 pts
+
+The next few vulns will all be configuration changes in sysctl.conf so bear with me.
+<br>
+This first one is determined by the `kernel.unprivileged_bpf_disabled` variable and can be enabled by making it equal to one. 
+<br>
+Run the command `echo 'kernel.unprivileged_bpf_disabled = 1' >> /etc/sysctl.conf` to add this control to sysctl and run `sysctl -p` to put this change into effect.
+<br>
+![Alt text](2023-08-02_21-03.png)<br>
+
+## IPv4 spoofing protection set to strict - 1 pts
+
+This second one is determined by the `net.ipv4.conf.default.rp_filter` variable and can be enabled by making it equal to one. 
+<br>
+Run the command `echo 'net.ipv4.conf.default.rp_filter = 1' >> /etc/sysctl.conf` to add this control to sysctl and run `sysctl -p` to put this change into effect.
+<br>![Alt text](2023-08-02_21-16.png)<br>
+
+
+
+## TCP TIME-WAIT assassination protection enabled - 1 pts
+This third one is determined by the `net.ipv4.tcp_rfc1337` variable and can be enabled by making it equal to one. 
+<br>
+Run the command `echo 'net.ipv4.tcp_rfc1337 = 1' >> /etc/sysctl.conf` to add this control to sysctl and run `sysctl -p` to put this change into effect.
+<br>![Alt text](2023-08-02_21-22.png)<br>
+
+
+## Access to the kernel syslog is restricted - 1 pts
+This fourth one is determined by the `kernel.dmesg_restrict` variable and can be enabled by making it equal to one. 
+<br>
+Run the command `echo 'kernel.dmesg_restrict = 1' >> /etc/sysctl.conf` to add this control to sysctl and run `sysctl -p` to put this change into effect.
+<br>![Alt text](2023-08-02_21-28.png)<br>
+
+
+## SUID binaries are not allowed to dump core - 1 pts
+
+This fifth and final one is determined by the `fs.suid_dumpable` variable and can be enabled by making it equal to zero. 
+<br>
+Run the command `echo 'kernel.dmesg_restrict = 0' >> /etc/sysctl.conf` to add this control to sysctl and run `sysctl -p` to put this change into effect.
+<br>![Alt text](2023-08-02_21-36.png)<br>
+
+
+## Auditd service is started - 2 pts
+
+Now we are finally done with sysctl stuff and have a few Auditd vulnerabilities starting with running the service and then followed up by a couple configuration things.
+<br>
+To start the auditd service, simply run the command `systemctl start auditd`
+<br>![Alt text](2023-08-02_21-38.png)<br>
+
+## Auditd writes logs to disk - 3 pts
+
+Now that the service is starting, we want to enable a few important features in the auditd configuration file.
+<br>
+Open `/etc/audit/auditd.conf` and change the line `write_logs = no` to `write_logs = yes`. 
+<br>
+This enables the audit logs to be written to the disk
+<br>![Alt text](2023-08-02_21-40.png)<br>
+
+
+
+
+
+## Auditd logs local events - 3 pts
+
+You might have seen this one at the top of the auditd configuration file from our last vuln, but another glaring "no" is staring us right in the face.
+<br>
+Open `/etc/audit/auditd.conf` and change the line `local_events = no` to `local_events = yes`.
+<br>
+This allows us to log local events as well which is obviously important and a good logging best practice.
+<br>![Alt text](2023-08-02_21-45.png)<br>
+
+
+## SSH service is started - 3 pts
+
+Our next onslaught of vulnerabilities will come from the SSH critical service. 
+This was specified as a Critical Service by the ReadMe where it also stated some configuration changes it wanted (more on that in the future vulns).
+<br>
+The SSH service is broken in 2 main ways, both of which the error messages will guide us to.
+<br>
+Firstly, lets try starting the ssh service and see what happens.<br>![Alt text](2023-08-02_22-01.png)<br>
+This error says that the sshd service file is masked. We say a similar thing with firewalld so we know what to do.
+<br>
+Run the command `systemctl unmask --now sshd` and try to start the service again
+<br>
+![Alt text](2023-08-02_22-04.png)
+<br>
+This is an interesting error that is basically telling us that the sshd.service file that systemctl uses to know how to start our service does not work properly.
+<br>
+This is normally located in `/etc/systemd/system/sshd.service`
+<br>
+Checking this file, we see that it's running the command `ls` to start the service<br>
+![Alt text](2023-08-02_22-05_1.png)<br>
+Looking in the file it is pulled from in `/usr/lib`, we see that instead of the ssh binary being ran when the service is started, it runs ls.<br>
+![Alt text](2023-08-02_21-54.png)<br>
+Because of this, lets just get a good one off of our fresh Fedora machine form earlier.
+<br>
+On a fresh Fedora, copy the contents of the file `/usr/lib/systemd/system/sshd.service` to `/etc/systemd/system/sshd.service` on our challenge machine.
+<br>![Alt text](2023-08-02_21-56.png)<br>
+As a good remediation step, add it to /usr/lib/systemd/system/sshd.service too.
+<br>
+![Alt text](2023-08-02_22-07.png)
+<br>
+Now we get a different error when we try to start the service.
+<br>
+This error code doesn't lead us too far so lets check the output of `systemctl status sshd.service`
+<br>![Alt text](2023-08-02_22-09.png)<br>
+This error code shows that the options supplied to the sshd binary were not valid.
+<br>
+These configuration options are stored in `/etc/ssh/sshd_config` so we'll check there first.
+<br>![Alt text](2023-08-02_22-11.png)<br>
+When checking for only the options that are supplied, the problem becomes abundantly clear. There is a random character "a" at the bottom of the file.
+<br>
+After removing this stray character from the sshd configuration file and trying to start the service again, we see it succeeds!!
+<br>![Alt text](2023-08-02_22-13.png)<br>
+
+## SSH root login disabled - 1 pts
+
+Now are the SSH configuration file vulns that are very common and very easy to remediate.
+<br>
+For this first one, simply change the value `PermitRootLogin yes` to `PermitRootLogin no` in `/etc/ssh/sshd_config`
+<br>
+This disallows someone logging in through ssh as root. This is insecure because root has inherent superuser permissions so it is best practice to not allow direct root access to any user. Rather, you should use the `sudo` command.
+<br>
+Save the file and you'll get the points!
+<br>
+![Alt text](2023-08-02_22-16.png)<br>
+
+
+## SSH X11 forwarding disabled - 1 pts
+
+Here comes our second simple SSH configuration file vuln. 
+<br>
+To remediate this one, change the value `X11Forwarding yes` to  `X11Forwarding no` in `/etc/ssh/sshd_config`
+<br>
+This disables the ability for a connecting client to run a graphical program on the server and forward the display to the client's machine.
+<br>
+When X11 forwarding is enabled, there may be additional exposure to the server and to client displays if the sshd proxy display is configured to listen on the wildcard address.
+<br> Additionally, the authentication spoofing and authentication data verification and substitution occur on the client side. The security risk of using X11 forwarding is that the client's X11 display server maybe exposed to attack when the SSH client requests forwarding
+<br>
+Save the configuration changes we made to get points!
+<br>![Alt text](2023-08-02_22-21.png)<br>
+
+
+## SSH password authentication disabled - 1 pts
+
+Now we have our ReadMe specified appsec vuln for SSH.
+<br>
+It exceedingly simple if you just follow the ReadMe.
+<br>![Alt text](2023-08-02_22-22.png)<br>
+It wants us to force the users to only login through public key authentication.
+<br>
+To do this we must:
+ * disable password authentication
+ * enable public key authentication
+<br>
+
+To do this, add the lines `PubkeyAuthentication yes` and `PasswordAuthentication no` to `/etc/ssh/sshd_config`
+<br>![Alt text](2023-08-02_22-25.png)<br>
+Save the configuration changes and we will get points for disallowing users to login with passwords.
+<br>
+
+## Fortune command added to CGI binaries directory - 3 pts
+
+This was anther vuln specified by the ReadMe expect this time it has to do with the critical service "boa".
+<br>
+The ReadMe states:
+```text
+We are experiencing some problems with the /cgi-bin/quest endpoint, as it should display text from the fortune command. This does not seem to be functional. Please investigate this, and ensure that the website is functional. Do not edit the CGI script itself. The CGI scripts must remain exactly as-is.
+```
+<br>
+There is a web server running CGI bins. Because the CGI bin configurations are normally specified by the web server, we will check the boa configuration file located at `/etc/boa/boa.conf`
+<br>
+In the boa configuration file, we see two references to CGI bins:
+<br>
+
+![Alt text](2023-08-02_22-35.png)
+<br>
+CGI bins can't run system binaries that are not specifically specified and sandboxed so the `CGIPath` variable states where the binaries that cgi bins can run are stored.
+<br>
+Because the CGI bin "quest" isn't able to run a command, this is a good place to start.
+<br>
+Before we do that however, lets make sure that the quest cgi bin and the fortune command are both working and good.
+<br>
+
+![Alt text](2023-08-02_22-39.png)
+<br>
+The CGI bin and the "fortune" command both are what they are intended to be.
+<br>
+Now lets check the "/var/www/sandbox" directory.
+<br>
+
+![Alt text](2023-08-02_22-41.png)
+<br>
+Sure enough, the two other binaries we need are present but the "fortune" binary isn't.
+<br>
+Lets copy over the fortune binary into the sandbox directory.
+<br>
+
+![Alt text](2023-08-02_22-42.png)
+<br>
+After doing that, the CGI bin "quest" can now run the fortune command as intended.
+<br>
+
+## DNF package manager GPG check globally enabled - 3 pts
+
+This vuln is as it seems, a DNF configuration change.
+<br>
+Because we are using DNF as our package manager, we want to make sure it is secure.
+<br>
+It is often over looked in many companies and personal endeavors, but to be secure, you must secure everything.
+<br>
+Let's look at the dnf configuration file located at `/etc/dnf/dnf.conf`
+<br>
+It isn't very big so it is easy to digest.
+<br>
+
+![Alt text](2023-08-02_22-47.png)
+<br>
+We see that `gpgcheck` is set to "False".
+<br>
+This means that an RPM package's signature is not checked prior to installation, allowing malicious packages to be installed instead.<br>
+This is set to "True" by default and should be changed immediately if set to "False"
+<br>
+To do this, simply change `gpgcheck=False` to `gpgcheck=True` in `/etc/dnf/dnf.conf`
+<br>
+
+![Alt text](2023-08-02_22-50.png)
+<br>
+Now save the file and the vulnerability should be remediated!
+
+<br>
+
+## Fixed insecure permissions on passwd file - 3 pts
+
+This vulnerability is very common and compromises the security of a system by allowing unprivileged users to read or write to a file that they shouldn't.
+<br>
+To check for unprivileged users and groups owning configuration and system files located in `/etc`, run the command `ls -l /etc/ | awk '{print $3":"$4,$9}' | grep -v "^root:root" | grep -v "^:"`\
+<br>
+
+![Alt text](2023-08-02_22-57.png)
+<br>
+This shows that the file 'cups' is owned by the group 'lp', which is an administrator group and is default.
+<br>
+However it also shows that the file "/etc/passwd", an important file specifying users on the system, is owned by the group "galadriel".
+<br>
+This means that the unprivileged users in that group are able to write to that file, allowing privilege escalation.
+<br>
+Change this with the command `chown root:root /etc/passwd`
+<br>
+This successfully remediates this vulnerability.
+<br>
+
+## Fixed insecure permissions on boa.conf - 3 pts
+
+Next is another file permission issue. This time with our web server's configuration file.
+<br>
+In our last vulnerability, we checked for unprivileged users and groups owning configuration and system files located in `/etc`
+<br>
+This left the vulnerabilities pertaining to file permissions wide open by only checking for file owners.
+<br>
+We also neglected to check for files in subdirectories, which most configuration files are.
+<br>
+Lets fix this last gap first.
+<br>
+To check for all non-root file owners in "/etc" and its subdirecotries, run the command `find /etc/ -exec ls -l {} \; | awk '{print $3":"$4,$9}' | grep -v "^root:root" | grep -v "^:"`
+<br>
+
+![Alt text](2023-08-02_23-04.png)
+
+<br>
+As previously specified, the group "lp" is default and an administrator group.
+<br>
+The groups "openvpn" and "polkitd" are both default too and are only owned by their respective configuration files.
+<br>
+
+Now lets check for file permissions in "/etc/" and its subdirectories.
+<br>
+
+To check for all world writeable files in /etc (a big vulnerability in configuration files, allowing unprivileged users to change system settings),
+run the command `find /etc/ -type f -perm /o+w`
+<br>
+
+![Alt text](2023-08-02_23-10.png)
+<br>
+We see a lot of SSH stuff, which isn't secure, but also doesn't stick out.
+<br>
+However the boa configuration file being world writable is very insecure.
+This allows any user to change the very essence of our public facing web server.
+<br>
+To fix this, run the command `chmod 644 /etc/boa/boa.conf`
+<br>
+This only allows the owner of the file, root, to write to it.
+<br>
+
+![Alt text](2023-08-02_23-14.png)
+<br>
+
+This fixes the glaring vulnerability and scores us points!
+
+<br>
+
+## Public files directory has the sticky bit set - 3 pts
+
+This is another thing the ReadMe asks us to do.
+<br>
+It states, 
+```text
+In addition to the CGI content and main webpage, the web server is authorized to serve the folder /var/www/html/files/ as a public data directory. Ensure that all users can read and write to their own files in this folder.
+```
+<br>
+This is very straight forward, we simply need to allow users to read and write to files owned by them in that directory.
+<br>
+To do this, we will use a add a sticky bit to the file permissions on that directory. 
+<br>
+When the sticky bit is set, only the user that owns, the user that owns the directory, or the root user can delete files within the directory.
+<br>
+This serves our purposes perfectly.
+<br>
+To set a stick bit, run the command `chmod +t /var/www/html/files`
+<br>
+
+![Alt text](2023-08-02_23-19.png)
+<br>
+This fixes what the ReadMe asks of us and therefore scores us points!
+
+<br>
+
+## Boa binary is owned by root - 3 pts
+
+This next vuln is a file permission issue, but unlike the others that existed in "/etc/" and were system or configuration file issues, this one exists with a system binary.
+<br>
+To check for weak file permissions on system binaries, we will run a nearly identical command to the one we did before.
+<br>
+Run the command, `ls -l /bin/ | awk '{print $3":"$4,$9}' | grep -v "^root:root" | grep -v "^:"`
+
+<br>
+
+![Alt text](2023-08-02_23-22.png)
+<br>
+We see that although two binaries are owned by root and their respective groups, one is owned by a low privilege user and group "frodo"
+<br>
+This allows frodo to change the binary file that runs our systems web server.
+<br>
+To remediate this issue, change the file ownership of the boa binary to the user and group "root".
+<br>
+Run the command `chown root:root /bin/boa`
+<br>
+
+![Alt text](2023-08-02_23-24.png)
+<br>
+We see that now our http server's binary is now owned by root and cannot be tampered with!
+
+<br>
+
+## Removed SUID bit from ed - 3 pts
+
+This is a very common vulnerability that can be exploited to get root access to a system.
+<br>
+SUID bits enable a user to run a binary with the permissions of that binaries owner. Meaning that a binary owned by root can be ran as a normal user with root permissions.<br>
+In many cases, this allows privilege escalation.
+<br>
+First lets search for files with an SUID bit set.
+<br>
+To do this, run the command `find / -perm -4000 2>/dev/null`
+<br>
+
+![Alt text](2023-08-02_23-30.png)
+<br>
+This has a lot of output due to some system binaries requiring them.
+<br>
+However one sticks out, `/usr/bin/ed`
+<br>
+'ed' is a text editor and has no reason to need root permissions to run.
+<br>
+To exploit this, one can simply run the command `ed FILE_ONLY_ROOT_SHOULD_READ`
+then `,p` (for more on this, read GTFObins https://gtfobins.github.io/gtfobins/ed/)
+<br>
+
+![Alt text](2023-08-02_23-34.png)
+<br>
+Using this, we can read the file /etc/shadow.
+<br>
+To fix this glaring vulnerability, run the command `chmod -s /usr/bin/ed`
+<br>
+
+![Alt text](2023-08-02_23-36.png)
+<br>
+Doing so remediates the vulnerability and gets us points
+
+<br>
+
+## GRUB configuration is not world readable - 2 pts
+
+This, along with many of our previous vulns, is an issue with file permissions, Now specifically with a configuration file being world readable.
+<br>
+Before, however, we only checked the "/etc/" directory for world *writeable* files
+<br>
+To search the whole file system (excluding /proc due to many non-insecure world writable files and /etc due to us previously checking it), run the command `find /  -type f -perm /o+w 2>/dev/null | grep -v "/proc" | grep -v "^/etc"`
+<br>
+In this case, the grub configuration file should not be world writable OR world readable but due to narrowing down our search and looking for files with many more perms than they should have, we narrowed it down to only world writable files
+<br>
+
+![Alt text](2023-08-02_23-41.png)
+<br>
+Doing so outputs a configuration file for the GRUB bootloader located in the "/boot" directory.
+<br>
+This sets the settings for our systems bootloader which is responsible for loading and transferring control to the operating system kernel software.
+<br>
+We  don't want this to be world readable because a normal user has no use or need to read this file.
+<br>
+To fix this, run the command `chmod 600 /boot/grub2/grub.cfg`
+<br>
+
+![Alt text](2023-08-02_23-51.png)
+<br>
+This fixes our vulnerability by giving non-root users no permissions this file.
+<br>
+
+## SELinux enabled and set to enforcing - 3 pts
+
+SELinux is a Linux kernel security module that provides a mechanism for supporting access control security policies, including mandatory access controls.
+<br>
+This is a very good security tool to have configured and enforcing.
+<br>
+To see if its enabled and enforcing, run the command `sestatus`
+<br>
+
+![Alt text](2023-08-02_23-57.png)
+<br>
+In this case, we see that is in fact disabled.
+<br>
+As previously stated, this is not a good security practice.
+<br>
+To enable it and make sure it is enforcing the settings, edit the file `/etc/selinux/config`
+<br>
+Change the variable `SELINUX=disabled` to `SELINUX=enforcing`
+<br>
+
+![Alt text](2023-08-02_23-59.png)
+<br>
+
+Save the file, reboot the system with the command `reboot`, and now it is set to enforcing!
+<br>
+
+## User processes are killed on logout - 3 pts
+
+This is a slightly obscure and uncommon vuln and is definitely the hardest one in the image.
+<br>
+If you check the file `/etc/systemd/logind.conf`, you see that all its configurations are commented out, which is default.
+<br> 
+
+![Alt text](2023-08-03_00-03.png)
+<br>
+However this is not best security practice.
+<br>
+Specifically the variable `KillUserProcesses`. This configures whether the processes of a user should be killed when the user logs out. If true, the scope unit corresponding to the session and all processes inside that scope will be terminated.
+<br>
+Not only is this set to `no` when according to the docs, it should default to `yes`, but it is also commented out.
+<br>
+To fix this uncomment it and change it to `yes` and uncomment the two supporting configuration options below it too.
+<br>
+
+![Alt text](2023-08-03_00-07.png)
+<br>
+Doing so complies with security best practice as well as gets us points.
+
+<br>
+
+## Boa port set correctly - 2 pts
+
+Our last vulns are boa web server related.
+<br>
+This one specifically has to do with complying with what the ReadMe specifies.
+<br>
+According to the ReadMe, `The web server should run the Boa web server, and serve HTTP on port 80.`
+<br>
+Lets check the boa configuration file located at `/etc/boa/boa.conf` to make sure this is set correctly.
+<br>
+
+![Alt text](2023-08-03_00-12.png)
+<br>
+As we can see, it is in fact not set to run on Port 80 and instead is set to run on port "8080".
+<br>
+To fix this, change it to say `Port 80`, save the file, and get points.
+<br>
+
+## Boa runs as the nobody user - 3 pts
+
+These next vulns will come from security best practices with the boa configuration file
+<br>
+![Alt text](2023-08-03_00-15.png)
+<br>
+Checking the boa web server docs, we see that we should be running as the user and group "nobody"
+<br>
+Lets check our boa configuration file to make sure this is the case.
+<br>
+![Alt text](2023-08-03_00-16.png)
+<br>
+As we see, it is set to the user "frodo" and the administrator group "wheel"
+<br>
+Change this to the user and group nobody.
+<br>
+![Alt text](2023-08-03_00-17.png)
+<br>
+Save the file and get points!
+
+<br>
+
+
+## Boa default MIME type is text/plain - 3 pts
+
+The final vulnerability is, as previously stated, also a boa web server best practice.
+<br>
+Checking all the boa configurations with the command `cat /etc/boa/boa.conf | grep -v "^#" | grep . --color=none` shows us all our active configurations for the boa web server.
+<br>
+Reading through the docs located at http://www.boa.org/documentation/boa-2.html
+can give us an idea of potentially vulnerable settings.
+<br>
+We see in the docs that the "DefaultType" configuration sets the MIME type used if the file extension is unknown, or there is no file extension.
+<br>
+In our boa configuration file, this is set to `DefaultType text/html`
+<br>
+![Alt text](2023-08-03_00-28.png)
+<br>
+This is a risk because it allows any file with an unknown or no extension to run html code.
+<br>
+We can check the default configuration file at https://github.com/gpg/boa/blob/master/examples/boa.conf (which also reveals our other configuration vulnerabilities)
+<br>
+We see that the "DefaultType" is set to "text/plain"
+<br>
+Lets make this change in our boa.conf file.
+<br>
+
+![Alt text](2023-08-03_00-27.png)
+<br>
+Save the file and we get our flag!
+<br>
+
+![Alt text](2023-08-03_00-29.png)
+<br>
+
+### **ictf{0ne_d0es_n0t_simply_walk_int0_m0rd0r_but_y0u_did_1f5319db}**
+
